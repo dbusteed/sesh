@@ -28,7 +28,7 @@ If (-not (Test-Path $sessions_path)) {
 }
 
 # get the data found in session file
-$sessions = Get-Content $sessions_path
+[array]$sessions = Get-Content $sessions_path
 
 $i = 1
 
@@ -36,13 +36,17 @@ $i = 1
 Write-Host "Available SSH Sessions" -ForegroundColor Blue
 Write-Host "----------------------" -ForegroundColor Blue
 If ($sessions.Length -eq 0)  {
+
     Write-Host "No sessions found" -ForegroundColor Cyan
+
 } 
 Else {
+
     $sessions | forEach {
         Write-Host "[$i] $_" -ForegroundColor Cyan
         $i += 1
     }
+
 }
 
 # Write second part of menu
@@ -77,7 +81,8 @@ If($choice -eq "a") {
 
         start notepad $sessions_path
 
-    } ElseIf ($choice -eq "c") {
+    }
+	ElseIf ($choice -eq "c") {
         
         Write-Host ""
 
@@ -91,24 +96,29 @@ If($choice -eq "a") {
               
         } While($sesh -ne "q")
     
-    } ElseIf ($choice -eq "r") {
+    }
+	ElseIf ($choice -eq "r") {
 
         myssh
 
-    } ElseIf ($choice -eq "q") {
+    }
+	ElseIf ($choice -eq "q") {
         
         Write-Host ""
         Stop-Script
     
-    } Else {
+    }
+	Else {
     
         Write-Host "`n[ERROR] Invalid input." -ForegroundColor Red
         Stop-Script
     
     }
 
+
+}
 # help menu
-} ElseIf ($choice -eq "h") {
+ElseIf ($choice -eq "h") {
 
     Clear-Host
     
@@ -146,23 +156,26 @@ If($choice -eq "a") {
         myssh
     }
 
+}
 # quit
-} ElseIf ($choice -eq "q") {
+ElseIf ($choice -eq "q") {
 
     Stop-Script
 
+}
 # connecting to session (check if valid #)
-} ElseIf ($choice -gt 0 -and $choice -lt ($sessions.Length+1) ) {
+ElseIf ($choice -gt 0 -and $choice -lt ($sessions.Length+1) ) {
 
-    Try {
+    Try {	
         ssh $sessions[$choice-1]
     } Catch {
         Write-Host "[ERROR] Unknown issue with SSH, check your session arguments" -ForegroundColor Red
         Stop-Script
     }
 
+}
 # everythin else
-} Else {
+Else {
     
     Write-Host "[ERROR] Invalid Input" -ForegroundColor Red
     Stop-Script
