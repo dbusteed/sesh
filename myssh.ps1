@@ -126,7 +126,7 @@ ElseIf ($choice -eq "h") {
     Write-Host "----------" -ForegroundColor Blue
     Write-Host ""    
     Write-Host "USAGE:" -ForegroundColor Cyan
-    Write-Host "  Run the script in PowerShell my typing in 'myssh'."
+    Write-Host "  Run the script in PowerShell by typing in 'myssh'."
     Write-Host "  (if you are reading this message, you probably already did this)"
     Write-Host ""
     Write-Host "  Also remember to add 'myssh.ps1' to your PATH, so that it can be used anywhere"
