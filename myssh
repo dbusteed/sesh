@@ -100,7 +100,7 @@ elif [[ $choice == "h" ]]; then
     echo "----------"
     echo ""
     printf "$OPTIONS""USAGE:\n"
-    echo "  Run the script in your terminal my typing in 'myssh'."
+    echo "  Run the script in your terminal by typing in 'myssh'."
     echo "  (if you are reading this message, you probably already did this)"
     echo ""
     echo "  Also remember to add 'myssh' to your PATH, so that it can be used anywhere"
