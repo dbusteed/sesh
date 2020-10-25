@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# Davis Busteed
-#
 # Checkout README.md for info
 
 INFO="\033[93m[INFO]" # yellow
@@ -9,16 +7,19 @@ ERROR="\033[91m[ERROR]" # red
 MENU="\033[94m" # blue
 OPTIONS="\033[96m" # cyan
 
+running=1
+
 stop_script() {
-    printf "$INFO Quitting MySSH...\n"
+    printf "\n$INFO Quitting MySSH...\n"
+    running=0
 }
 
 clear
 
-sessions_path=~/.ssh/sessions
+sessions_path=~/.ssh/myssh_sessions
 
 if [[ ! $(command -v ssh) ]]; then
-    printf "$ERROR 'ssh command doesn't exist or is not available\n"
+    printf "$ERROR ssh command doesn't exist or is not available\n"
     stop_script
 fi
 
@@ -33,103 +34,124 @@ if [[ ! -f $sessions_path ]]; then
     echo ""
 fi
 
-length=$(wc -l $sessions_path | awk '{print $1}')
+print_menu() {
+    length=$(wc -l $sessions_path | awk '{print $1}')
 
-printf "$MENU""Available SSH Sessions\n"
-echo "----------------------"
+    printf "$MENU""Available SSH Sessions\n"
+    echo "----------------------"
 
-if [[ -s $sessions_path ]]; then
-    i=1
-    while read -r line; do
-        printf "$OPTIONS[$i] $line\n"
-        i=$((i+1))
-    done < $sessions_path
-else
-    printf "$OPTIONS""No sessions found\n"
-fi
+    if [[ -s $sessions_path ]]; then
+        i=1
+        while read -r line; do
+            printf "$OPTIONS[$i] $line\n"
+            i=$((i+1))
+        done < $sessions_path
+    else
+        printf "$OPTIONS""No sessions found\n"
+    fi
 
-printf "\n$MENU""Other Options\n"
-echo "-------------"
-printf "$OPTIONS[a] Add / edit SSH sessions\n"
-printf "$OPTIONS[h] Help\n"
-printf "$OPTIONS[q] Quit\n"
-
-printf "\nSelect an option: "
-read choice
-
-echo ""
-
-if [[ $choice == "a" ]]; then
-    clear
-
-    # add option to return?
-    printf "$MENU""Add / edit SSH Sessions\n"
-    echo "-----------------------"
-    printf "$OPTIONS[v] Edit with Vi\n"
-    printf "$OPTIONS[n] Edit with Nano\n"
+    printf "\n$MENU""Other Options\n"
+    echo "-------------"
+    printf "$OPTIONS[a] Add / edit SSH sessions\n"
+    printf "$OPTIONS[h] Help\n"
     printf "$OPTIONS[q] Quit\n"
 
     printf "\nSelect an option: "
     read choice
+}
 
-    echo ""
+while [[ $running -eq 1 ]]; do
+    
+    print_menu
 
-    if [[ $choice == "v" ]]; then
-        vi $sessions_path
-        printf "$INFO SSH Sessions updated!\n"
-        stop_script
-    
-    elif [[ $choice == "n" ]]; then
-        nano $sessions_path
-        printf "$INFO SSH Sessions updated!\n"
-        stop_script
-    
+    if [[ $choice == "a" ]]; then
+
+        clear
+
+        printf "$MENU""Add / edit SSH Sessions\n"
+        echo "-----------------------"
+        printf "$OPTIONS[v] Edit with Vi\n"
+        printf "$OPTIONS[n] Edit with Nano\n"
+        printf "$OPTIONS[r] Return\n"
+
+        printf "\nSelect an option: "
+        read choice
+
+        echo ""
+
+        if [[ $choice == "v" ]]; then
+            if [[ ! $(command -v vi) ]]; then
+                clear
+                printf "$ERROR vi command doesn't exist or is not available\n\n"
+            else
+                vi $sessions_path
+                clear
+                printf "$INFO SSH Sessions updated!\n\n"
+            fi
+        
+        elif [[ $choice == "n" ]]; then
+            if [[ ! $(command -v nano) ]]; then
+                clear
+                printf "$ERROR nano command doesn't exist or is not available\n\n"                
+            else
+                nano $sessions_path
+                clear
+                printf "$INFO SSH Sessions updated!\n\n"
+            fi
+        
+        elif [[ $choice == "r" ]]; then
+            :
+        
+        else
+            clear
+            printf "$ERROR Invalid input, returning to main menu\n\n"
+
+        fi
+
+    elif [[ $choice == "h" ]]; then
+        clear
+        
+        help=$(echo -e "$MENU""MySSH Help (hit 'q' to exit)")
+        help+=$(echo -e "\n$MENU----------------------------")
+        help+=$'\n\n'
+        help+=$(echo -e "$OPTIONS""USAGE:")
+        help+=$'\n  Run the script in your terminal by typing in \'myssh\'.'
+        help+=$' (if you are reading this message, you probably already did this)'
+        help+=$'\n'
+        help+=$'\n  Also remember to add \'myssh\' to your PATH, so that it can be used anywhere'
+        help+=$'\n\n'
+        help+=$(echo -e "$OPTIONS""SESSIONS FILE:")
+        help+=$'\n  The file located at $sessions_path stores your SSH sessions'
+        help+=$' Use option \'a\' in this script to add to it, or simply use a text editor'
+        help+=$'\n'
+        help+=$'\n  Each line of the sessions file should contain valid arguments for'
+        help+=$' the \'ssh\' command. In other words, each line should be the arguments'
+        help+=$' you would normally pass the \'ssh\' command'
+        help+=$'\n'
+        help+=$'\n  An example sessions file could be as follows:'
+        help+=$'\n'
+        help+=$'\n    +----------------------+'
+        help+=$'\n    | admin@dev-server.com |'
+        help+=$'\n    | 123.23.42.51 -l bob  |'
+        help+=$'\n    | ...                  |'
+        help+=$'\n    +----------------------+'
+        help+=$'\n'
+        help+=$'\n(hit \'q\' to exit)'
+        help+=$'\n'
+
+        echo "$help" | less
+
     elif [[ $choice == "q" ]]; then
         stop_script
-    
-    else
-        printf "$ERROR Invalid input\n"
+
+    elif [[ $choice -gt 0 && $choice -le $length ]]; then
+        echo ""
+        ssh $(sed "${choice}q;d" $sessions_path)
         stop_script
 
+    else
+        clear
+        printf "$ERROR Invalid input\n\n"
     fi
 
-elif [[ $choice == "h" ]]; then
-    clear
-    
-    printf "$MENU""MySSH Help\n"
-    echo "----------"
-    echo ""
-    printf "$OPTIONS""USAGE:\n"
-    echo "  Run the script in your terminal by typing in 'myssh'."
-    echo "  (if you are reading this message, you probably already did this)"
-    echo ""
-    echo "  Also remember to add 'myssh' to your PATH, so that it can be used anywhere"
-    echo ""
-    printf "$OPTIONS""SESSIONS FILE:\n"
-    echo "  The file located at $sessions_path stores your SSH sessions"
-    echo "  Use option 'a' in this script to add to it, or simply use a text editor"
-    echo ""
-    echo "  Each line of the sessions file should contain valid arguments for the 'ssh' command"
-    echo "  In other words, each line should be the arguments you would normally pass the 'ssh' command"
-    echo ""
-    echo "  An example sessions file could be as follows:"
-    echo ""
-    echo "    +----------------------+"
-    echo "    | admin@dev-server.com |"
-    echo "    | 123.23.42.51 -l bob  |"
-    echo "    | ...                  |"
-    echo "    +----------------------+"
-    echo ""
-
-    stop_script
-
-elif [[ $choice == "q" ]]; then
-    stop_script
-
-elif [[ $choice -gt 0 && $choice -le $length ]]; then
-    ssh $(sed "${choice}q;d" $sessions_path)
-
-else
-    printf "$ERROR Invalid input\n"
-    stop_script
-fi
+done
