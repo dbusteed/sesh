@@ -22,4 +22,5 @@ After running the script, enter `h` to view the Help Menu
 
 ## TODO
 
-Add a similar script to MySSH called MySCP, which connects `scp` with the MySSH Sessions
+* Add a similar script to MySSH called MySCP, which connects `scp` with the MySSH Sessions
+* Add option to the myssh so you can call a session quickly (ex: `myssh 5`)
