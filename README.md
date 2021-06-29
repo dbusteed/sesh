@@ -1,26 +1,32 @@
-# MySSH
+# SeSH
 
-Lil' script for when you want to save several SSH sessions, but you don't really need another tool like Putty, etc.
+Small command line program for managing SSH sessions
+
+<br>
 
 ## Setup
 
 * ### Linux / MacOS
-    1. `git clone https://github.com/dbusteed/myssh`
-    1. `chmod +x myssh`
-    1. add the project directory to your PATH OR move `myssh` to some `bin/` folder that is already on your PATH
-    1. run with `myssh` 
+    1. `git clone https://github.com/dbusteed/sesh`
+    1. `chmod +x sesh`
+    1. add the project directory to your PATH, or move `sesh` to some `bin/` folder that is already on your PATH
+    1. run the `sesh` command
 
 * ### Windows
-    1. `git clone https://github.com/dbusteed/myssh`
-    1. add the project directory to your PATH OR move `myssh.ps1` to a folder that is already on your PATH
+    1. `git clone https://github.com/dbusteed/sesh`
+    1. add the project directory to your PATH, or move `sesh.ps1` to a folder that is already on your PATH
     1. you might need to allow your PowerShell to run foreign scripts
-    1. run with `myssh` or `myssh.ps1`
+    1. run the `sesh.ps1` command
+
+<br>
 
 ## Usage / Help
 
-After running the script, enter `h` to view the Help Menu
+After running the script, enter `h` to view the help menu
 
-## TODO
+<br>
 
-* Add a similar script to MySSH called MySCP, which connects `scp` with the MySSH Sessions
-* Add option to the myssh so you can call a session quickly (ex: `myssh 5`)
+## Future Additions
+
+* Add a similar script to `sesh` integrates `scp` with your sessions
+* Add option in the `sesh` command so you can call a session quickly (ex: `sesh 5`)

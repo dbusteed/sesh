@@ -3,13 +3,13 @@
 # Checkout README.md for info
 
 Function Stop-Script {
-    Write-Host "[INFO] Quiting MySSH..." -ForegroundColor Yellow
+    Write-Host "[INFO] Quiting SeSH..." -ForegroundColor Yellow
     exit
 }
 
 Clear-Host
 
-$sessions_path = $HOME + "\.ssh\sessions"
+$sessions_path = $HOME + "\.ssh\sesh_sessions"
 
 Write-Host ""
 
@@ -21,8 +21,8 @@ If (-not( Get-Command ssh -errorAction SilentlyContinue)) {
 
 # create file if not exists
 If (-not (Test-Path $sessions_path)) {
-    Write-Host "[INFO] MySSH Sessions not found at $sessions_path" -ForegroundColor Yellow
-    Write-Host "[INFO] Creating MySSH Sessions file at $sessions_path" -ForegroundColor Yellow
+    Write-Host "[INFO] SeSH Sessions not found at $sessions_path" -ForegroundColor Yellow
+    Write-Host "[INFO] Creating SeSH Sessions file at $sessions_path" -ForegroundColor Yellow
     $null > $sessions_path
     Write-Host ""
 }
@@ -99,7 +99,7 @@ If($choice -eq "a") {
     }
 	ElseIf ($choice -eq "r") {
 
-        myssh
+        sesh
 
     }
 	ElseIf ($choice -eq "q") {
@@ -122,14 +122,14 @@ ElseIf ($choice -eq "h") {
 
     Clear-Host
     
-    Write-Host "MySSH Help" -ForegroundColor Blue
+    Write-Host "SeSH Help" -ForegroundColor Blue
     Write-Host "----------" -ForegroundColor Blue
     Write-Host ""    
     Write-Host "USAGE:" -ForegroundColor Cyan
-    Write-Host "  Run the script in PowerShell by typing in 'myssh'."
+    Write-Host "  Run the script in PowerShell by typing in 'sesh'."
     Write-Host "  (if you are reading this message, you probably already did this)"
     Write-Host ""
-    Write-Host "  Also remember to add 'myssh.ps1' to your PATH, so that it can be used anywhere"
+    Write-Host "  Also remember to add 'sesh.ps1' to your PATH, so that it can be used anywhere"
     Write-Host ""
     Write-Host "SESSIONS FILE:" -ForegroundColor Cyan
     Write-Host "  The file located at $sessions_path stores your SSH sessions"
@@ -153,7 +153,7 @@ ElseIf ($choice -eq "h") {
         Write-Host ""
         Stop-Script
     } Else {
-        myssh
+        sesh
     }
 
 }
