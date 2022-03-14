@@ -26,6 +26,12 @@ After running the script, enter `h` to view the help menu
 
 <br>
 
+## Notes
+
+The bash version of the script is probably more developed than the PowerShell one, since that's where I spend most of my time
+
+<br>
+
 ## Future Additions
 
 * Add a similar script to `sesh` integrates `scp` with your sessions
